@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		文章标题：<input type="text" id="user"><br><br>
+		文章内容：<textarea id="texts"></textarea><br><br>
+		<button id="zc">发布</button>
+		
+		<script type="text/javascript">
+			zc.onclick=function(){
+				ajax({
+					url:'http://localhost:8002/',
+					type:'post',
+					data:{
+						user:user.value,
+						pass:texts.value
+					},
+					success:function(da){
+						alert(da)
+						if(da=="ok"){
+							document.location='xiangqing.html'
+						}
+					},
+					error:function(){
+						console.log('发布失败')
+					}
+				})
+			}
+			
+			function ajax(req){
+				var ajax=new XMLHttpRequest()
+				ajax.open(req.type,req.url,true)
+				ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+				ajax.send(str(req.data))
+				ajax.onreadystatechange=function(){
+					if(ajax.readyState==4){
+						if(ajax.status>=200&&ajax.status<300||ajax.status==304){
+							req.success(ajax.responseText)
+						}else{
+							req.error(ajax.status)
+						}
+					}
+				}
+				function str(da){
+					var arr=[]
+					for(var i in da){
+						arr.push(i+'='+da[i])
+					}
+					var strl=arr.join('&')
+					return strl
+				}
+			}
+		</script>
+	</body>
+</html>

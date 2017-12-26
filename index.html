@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		账号：<input type="text" id="user"><br /><br />
+		密码：<input type="password" id="pass"><br /><br />
+		<input type="button" id="zc" value="注册">
+		<input type="button" id="dl" value="登陆">
+		<script type="text/javascript">
+			zc.onclick=function(){
+				if(user.value==''){
+					alert('请输入账号')
+				}else if(pass.value==''){
+					alert('请输入密码')
+				}else{
+					ajax({
+						url:'http://localhost:8888/',
+						type:'post',
+						data:{
+							user:user.value,
+							pass:pass.value
+						},
+						success:function(da){
+							alert(da)
+							localStorage.username=da
+						},
+						error:function(){
+							console.log('登录失败')
+						}
+					})
+				}
+			}	
+	
+			dl.onclick=function(){
+				if(user.value==''){
+					alert('请输入账号')
+				}else if(pass.value==''){
+					alert('请输入密码')
+				}else{
+					ajax({
+						url:'http://localhost:8001/',
+						type:'post',
+						data:{
+							user:user.value,
+							pass:pass.value
+						},
+						success:function(da){
+							alert(da)
+							if(da=="登陆成功"){
+								document.location='content.html'
+							}					
+						},
+						error:function(){
+							console.log('登录失败')
+						}
+					})
+				}
+			}				
+	
+			function ajax(req){
+				var ajax=new XMLHttpRequest()
+				ajax.open(req.type,req.url,true)
+				ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+				ajax.send(str(req.data))
+				ajax.onreadystatechange=function(){
+					if(ajax.readyState==4){
+						if(ajax.status>=200&&ajax.status<300||ajax.status==304){
+							req.success(ajax.responseText)
+						}else{
+							req.error(ajax.status)
+						}
+					}
+				}
+				function str(da){
+					var arr=[]
+					for(var i in da){
+						arr.push(i+'='+da[i])
+					}
+					var strl=arr.join('&')
+					return strl
+				}
+			}
+	</script>
+	</body>
+</html>

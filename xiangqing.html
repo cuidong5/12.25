@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="box"></div>
+		
+		<script type="text/javascript">
+			ajax({
+				url:'http://localhost:8003/',
+				type:'post',
+				success:function(da){
+					box.innerHTML='<p>'+da+'</p>'
+				},
+				error:function(){
+					console.log('失败')
+				}
+			})
+			function ajax(req){
+				var ajax=new XMLHttpRequest()
+				ajax.open(req.type,req.url,true)
+				ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+				ajax.send(str(req.data))
+				ajax.onreadystatechange=function(){
+					if(ajax.readyState==4){
+						if(ajax.status>=200&&ajax.status<300||ajax.status==304){
+							req.success(ajax.responseText)
+						}else{
+							req.error(ajax.status)
+						}
+					}
+				}
+				function str(da){
+					var arr=[]
+					for(var i in da){
+						arr.push(i+'='+da[i])
+					}
+					var strl=arr.join('&')
+					return strl
+				}
+			}
+	</script>
+	</body>
+</html>
